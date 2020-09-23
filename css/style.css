@@ -1,0 +1,15 @@
+@font-face {
+    font-family: "digital-7 (italic)";
+    src: url("../src/fonts/digital-7 (italic).ttf") format("truetype"),
+        url('../src/fonts/digital-7 (italic).ttf') format('woff2'),
+        url('../src/fonts/digital-7 (italic).ttf') format('woff');
+    
+    font-style: italic; 
+    font-weight: normal;
+}
+
+
+body {
+    font-family: "digital-7 (italic)";
+    font-size: 30px;
+}
