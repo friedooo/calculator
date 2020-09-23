@@ -1,0 +1,2 @@
+# calculator
+rs task calculator
