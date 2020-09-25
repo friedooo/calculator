@@ -86,7 +86,49 @@ class Calculator {
         console.log(this.stack);
         console.log(this.outArr);
 
+        return this.outArr;
+
     };
+
+    computeRPN(str) {
+        this.getRPN(str);
+        // console.log(this.outArr);
+        let resultArr = []; // результирующий массив
+
+
+        while (this.outArr.length > 0) { // цикл до тех пор, пока выходной массив не будет пуст
+
+            
+        
+            if (this.isOperand(this.outArr[0])) { // если операнд, то удаляем элемент из выходного массива и добавляем в результирующий
+                resultArr.push(Number(this.outArr.shift()));
+            }
+            else if (this.isOperator(this.outArr[0])) { // если оператор, то делаем производим операцию с двумя последними элементами результирующего массив например "предпоследний/последний"
+                let a1 = Number(resultArr.pop());
+                let a2 = Number(resultArr.pop());
+                let operator = this.outArr.shift();
+
+                resultArr.push(this.operate(a2, a1, operator));
+            }
+            
+        }
+
+        //console.log(resultArr);
+
+        return resultArr[0];
+
+    }
+
+    operate(a1, a2, operator) { // выбираем действие в зависимости от оператора
+        if (operator === '+')
+        return a1 + a2;
+        if (operator === '-')
+        return a1 - a2;
+        if (operator === '*')
+        return a1 * a2;
+        if (operator === '/')
+        return a1 / a2;
+    }
 
     isSwitch(a1, a2) { // проверка приоритетов операторов
         let key1;
@@ -153,10 +195,10 @@ class Calculator {
 
 
 
-let exp = '(8+2*5)/(1+3*2-4)';
+let exp = '(2+3)*(4-1)';
 
 const calculator = new Calculator();
 
-console.log(calculator.getRPN(exp));
+console.log(calculator.computeRPN(exp));
 
 //console.log(calculator.isSwitch('+', '/'));
