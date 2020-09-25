@@ -114,7 +114,7 @@ class Calculator {
         }
 
         //console.log(resultArr);
-
+        console.log(this.expArr);
         return resultArr[0];
 
     }
@@ -166,14 +166,17 @@ class Calculator {
         let arr = [];
         let number = '';
         for (let i = 0; i < str.length; i += 1) {
-            if (this.isOperator(str[i]) && !this.isOperator(str[i - 1])) { // условие, если в выражении один оператор окружен операндами
-                arr.push(str[i]);
-            }
-            else if (this.isOperator(str[i]) && this.isOperator(str[i - 1])) {// // условие, если в выражении стоят 2 или больше операторов
+            if (this.isOperator(str[i]) && (this.isOperator(str[i - 1]) || i === 0 || str[i - 1] === '(')) {// // условие, если в выражении стоят 2 или больше операторов
+                console.log('aga');
                 number += str[i]; // добавление знаков (например, минуса) перед следующим возможным числом, т.е это случай, когда операторов стоит сразу несколько. создает числа вроде -20, +--50
+            }
+            else if (this.isOperator(str[i]) && !this.isOperator(str[i - 1])) { // условие, если в выражении один оператор окружен операндами
+                arr.push(str[i]); 
+                
             }
             else if (this.isBracket(str[i])) { //условие если скобка
                 arr.push(str[i]);
+            
             }
             else if (this.isOperand(str[i])) { // проверка, если число имеет несколько цифр
                 number += str[i]; // переменная аккумулирует число
@@ -187,6 +190,7 @@ class Calculator {
                            break;
                         }
                 }
+                
             }
         }
         return arr;
@@ -195,7 +199,7 @@ class Calculator {
 
 
 
-let exp = '(2+3)*(4-1)';
+let exp = '(-0.2 +- 0.5)';
 
 const calculator = new Calculator();
 
