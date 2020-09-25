@@ -162,7 +162,12 @@ class Calculator {
         return /[()]/.test(n);
     }
 
+    normalizeExp(str) {
+        return str.replace(/\s+/g, '');
+    }
+
     getExpArr(str) { // получаем из строки массив
+        str = this.normalizeExp(str);
         let arr = [];
         let number = '';
         for (let i = 0; i < str.length; i += 1) {
@@ -172,6 +177,7 @@ class Calculator {
             }
             else if (this.isOperator(str[i]) && !this.isOperator(str[i - 1])) { // условие, если в выражении один оператор окружен операндами
                 arr.push(str[i]); 
+
                 
             }
             else if (this.isBracket(str[i])) { //условие если скобка
@@ -189,8 +195,8 @@ class Calculator {
                            number = '';
                            break;
                         }
-                }
                 
+                }
             }
         }
         return arr;
@@ -199,7 +205,7 @@ class Calculator {
 
 
 
-let exp = '(-0.2 +- 0.5)';
+let exp = '(6+10-4)/( 1+1*2)+1';
 
 const calculator = new Calculator();
 
