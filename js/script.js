@@ -5,7 +5,6 @@ class Calculator {
             2: ['*', '/'],
             1: ['+', '-']
         };
-
     };
 
     // метод преобразует выражение в опн
@@ -15,8 +14,7 @@ class Calculator {
         this.expArr = this.getExpArr(str);
 
         for (let i = 0; i < this.expArr.length; i += 1)
-         {
-            
+         {    
             // если элемент - операнд - пушим его в выходной массив
              if (this.isOperand(this.expArr[i])) {
                                     
@@ -44,7 +42,6 @@ class Calculator {
                                 break;
                             }
                         }
-
                         this.stack.push(element); //пушим элемент в стэк
                     }
                     else {
@@ -72,22 +69,16 @@ class Calculator {
                     this.stack.push(element); // случай, когда в стэке ничего нет, пушим туда элемент
                 } 
              }
-
             //  console.log(this.expArr[i]);
             //  console.log(this.outArr);
-            //  console.log(this.stack);
-                
+            //  console.log(this.stack);          
          }
-
          for (let i = this.stack.length - 1; i >= 0; i -= 1) { // случай при завершении обратки цикла, допушиваем элементы из стэка в выходной массив
             this.outArr.push(this.stack[i]);
          }
-        
         console.log(this.stack);
         console.log(this.outArr);
-
         return this.outArr;
-
     };
 
     computeRPN(str) {
@@ -95,11 +86,7 @@ class Calculator {
         // console.log(this.outArr);
         let resultArr = []; // результирующий массив
 
-
-        while (this.outArr.length > 0) { // цикл до тех пор, пока выходной массив не будет пуст
-
-            
-        
+        while (this.outArr.length > 0) { // цикл до тех пор, пока выходной массив не будет пуст 
             if (this.isOperand(this.outArr[0])) { // если операнд, то удаляем элемент из выходного массива и добавляем в результирующий
                 resultArr.push(Number(this.outArr.shift()));
             }
@@ -112,7 +99,6 @@ class Calculator {
             }
             
         }
-
         //console.log(resultArr);
         console.log(this.expArr);
         return resultArr[0];
@@ -135,7 +121,6 @@ class Calculator {
         let key2;
 
         for (let key in this.prior) {
-            
             if (this.prior[key].indexOf(a1) != -1) {
                 key1 = key;
             }
@@ -148,6 +133,10 @@ class Calculator {
         // console.log(a2 + ' is key ' + key2);
 
         return key1 <= key2 ? true : false;
+    }
+
+    isNewOperator(n) {
+        return /[√]/.test(n);
     }
 
     isOperand(n) { // проверка на операнд, также учитывается разделитель точка
@@ -171,18 +160,18 @@ class Calculator {
         let arr = [];
         let number = '';
         for (let i = 0; i < str.length; i += 1) {
-            if (this.isOperator(str[i]) && (this.isOperator(str[i - 1]) || i === 0 || str[i - 1] === '(')) {// // условие, если в выражении стоят 2 или больше операторов
-                console.log('aga');
+            if (this.isNewOperator(str[i])) {
+                arr.push(str[i]);
+            }
+            else if (this.isOperator(str[i]) && (this.isOperator(str[i - 1]) || i === 0 || str[i - 1] === '(')) {// // условие, если в выражении стоят 2 или больше операторов
+                //console.log('aga');
                 number += str[i]; // добавление знаков (например, минуса) перед следующим возможным числом, т.е это случай, когда операторов стоит сразу несколько. создает числа вроде -20, +--50
             }
             else if (this.isOperator(str[i]) && !this.isOperator(str[i - 1])) { // условие, если в выражении один оператор окружен операндами
-                arr.push(str[i]); 
-
-                
+                arr.push(str[i]);   
             }
             else if (this.isBracket(str[i])) { //условие если скобка
                 arr.push(str[i]);
-            
             }
             else if (this.isOperand(str[i])) { // проверка, если число имеет несколько цифр
                 number += str[i]; // переменная аккумулирует число
@@ -195,8 +184,7 @@ class Calculator {
                            number = '';
                            break;
                         }
-                
-                }
+                }          
             }
         }
         return arr;
@@ -205,10 +193,12 @@ class Calculator {
 
 
 
-let exp = '(6+10-4)/( 1+1*2)+1';
+let exp = '√2';
 
 const calculator = new Calculator();
 
 console.log(calculator.computeRPN(exp));
 
 //console.log(calculator.isSwitch('+', '/'));
+
+//√
