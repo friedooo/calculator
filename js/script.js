@@ -116,6 +116,64 @@ class Calculator {
         return a1 / a2;
     }
 
+    newOperateWithOneArg(n) {
+        let beginNumber = 1;
+        let minusOrPlus = 1;
+            if (n[0] === '-') {
+                minusOrPlus = -1;
+                beginNumber = 2;
+            }
+
+            if (n[0] === '+') {
+                minusOrPlus = 1;
+                beginNumber = 2;
+            }
+
+            if (Number(n.slice(beginNumber, n.length)) < 0) {
+                alert('аргументы квадратного корня меньше 0!');
+            }
+
+            let res = Math.sqrt(Number(n.slice(beginNumber, n.length))) * minusOrPlus;
+
+                return String(res);
+    }
+
+    newOperateWithTwoArgs(n) {
+        let minusOrPlus1 = 1;
+        let minusOrPlus2 = 1;
+
+        if (n[0] === '-') {
+            minusOrPlus1 = -1;
+            n = n.slice(1, n.length);
+        }
+        
+        n.replace(/\-/, (e) => {
+            minusOrPlus2 = -1;
+        })
+
+        console.log('число после удаления знаков = ' + n);
+
+        let a1; 
+        let a2;
+
+        n.replace(/^[0-9]+/g, (e) => {
+            a1 = e;
+        })
+
+        n.replace(/[0-9]+$/g, (e) => {
+            a2 = e;
+        })
+
+        console.log('a1= ' + a1);
+        console.log('a2= ' + a2);
+
+        let res = Math.pow(minusOrPlus1 * Number(a1), minusOrPlus2 * Number(a2));
+
+        return String(res);
+        
+    }
+
+
     isSwitch(a1, a2) { // проверка приоритетов операторов
         let key1;
         let key2;
@@ -129,14 +187,15 @@ class Calculator {
             }
         }
 
-        // console.log(a1 + ' is key ' + key1);
-        // console.log(a2 + ' is key ' + key2);
-
         return key1 <= key2 ? true : false;
     }
 
-    isNewOperator(n) {
+    isNewOperatorWithOneArg(n) {
         return /[√]/.test(n);
+    }
+
+    isNewOperatorWithTwoArgs(n) {
+        return /\^/.test(n);
     }
 
     isOperand(n) { // проверка на операнд, также учитывается разделитель точка
@@ -160,11 +219,24 @@ class Calculator {
         let arr = [];
         let number = '';
         for (let i = 0; i < str.length; i += 1) {
-            if (this.isNewOperator(str[i])) {
-                arr.push(str[i]);
+            if (this.isNewOperatorWithTwoArgs(str[i])) {
+                number += arr.pop();
+                number += str[i];
             }
-            else if (this.isOperator(str[i]) && (this.isOperator(str[i - 1]) || i === 0 || str[i - 1] === '(')) {// // условие, если в выражении стоят 2 или больше операторов
-                //console.log('aga');
+            else if (this.isNewOperatorWithOneArg(str[i])) { //нахождение операторов с операндом в одной части - только справа
+                if (this.isOperator(str[i - 1]) && this.isOperator(str[i - 2])) {
+                    number += str[i - 1];
+                }
+                number += str[i]; 
+            }
+            else if (this.isNewOperatorWithTwoArgs(str[i - 1]) && this.isOperator(str[i])) {
+                number += str[i];
+
+            }
+            else if (this.isNewOperatorWithOneArg(str[i - 1]) && this.isOperator(str[i])) {
+                number += str[i];
+            }
+            else if ((this.isOperator(str[i]) || this.isNewOperatorWithOneArg(str[i])) && (this.isOperator(str[i - 1]) || i === 0)) {// // условие, если в выражении стоят 2 или больше операторов
                 number += str[i]; // добавление знаков (например, минуса) перед следующим возможным числом, т.е это случай, когда операторов стоит сразу несколько. создает числа вроде -20, +--50
             }
             else if (this.isOperator(str[i]) && !this.isOperator(str[i - 1])) { // условие, если в выражении один оператор окружен операндами
@@ -181,19 +253,35 @@ class Calculator {
                     else {
                            arr.push(number);
                            i = j - 1;
+                            if (this.isNewOperatorWithOneArg(number)) {
+                                arr.pop();
+                                arr.push(this.newOperateWithOneArg(number));
+                            }
+                            if (this.isNewOperatorWithTwoArgs(number)) {
+                                arr.pop();
+                                arr.push(this.newOperateWithTwoArgs(number));
+                            }
+                            
+                            console.log(number);
                            number = '';
                            break;
                         }
                 }          
             }
+
+            // console.log('элемент строки' + str[i]);
+            // console.log('number = ' + number);
+            // console.log('array ' + arr);
         }
+
+
         return arr;
     }
 };
 
 
 
-let exp = '√2';
+let exp = '(6+10-4)/(1+1*2)+1';
 
 const calculator = new Calculator();
 
